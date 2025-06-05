@@ -1,87 +1,70 @@
-# 🚴‍♀️ Seoul Bike Demand Classification using Machine Learning
+# 📘 Detailed Project Explanation
+This project aimed to classify bike rental demand in Seoul as either high or low based on historical data and environmental factors. The dataset used comprised hourly observations collected throughout the year, including features such as weather conditions, solar radiation, temperature, time-of-day, holidays, and seasonality.
 
-This project classifies daily **bike rental demand** in Seoul based on weather and temporal features using machine learning algorithms. It serves as a practical demonstration of **data preprocessing, EDA, feature selection**, and **classification modeling** on real-world transportation data.
+## 🧹 Data Cleaning and Preprocessing
+Datetime Conversion:
+The Date column was transformed into multiple features like Hour, Month, and Season to better capture temporal patterns.
 
----
+### Label Engineering:
+The target variable High_Demand was derived by applying a median threshold to the Rented_Bike_Count column. Records above the threshold were marked as 1 (high demand), and those below as 0 (low demand).
 
-## 📊 Objective
+### Handling Outliers and Scaling:
+Exploratory analysis revealed outliers particularly in Wind_speed and Rainfall. While some were retained to preserve real-world variance, normalization and scaling were applied where required to ensure model robustness.
 
-To predict whether bike demand on a given day is **high or low**, enabling:
-- Better resource allocation
-- Infrastructure planning
-- Smart city operations
+### Categorical Encoding:
+Columns like Holiday and Functioning Day were converted to binary indicators. The Seasons column was label-encoded.
 
----
+## 🔎 Exploratory Data Analysis (EDA)
+Correlation analysis was performed to identify the most influential features. It was found that Temperature, Hour, and Solar Radiation had strong positive relationships with demand, while Humidity and Rainfall showed negative correlations.
 
-## 🧠 Methodology
+Demand trends were observed to peak during mid-day hours and during warmer seasons. On holidays, the demand was generally lower, indicating potential behavioral shifts in commuter usage.
 
-### 1. Data Exploration
-- Dataset: `SeoulBikeData.csv` with 8760 hourly records
-- Key features: Temperature, Humidity, Wind speed, Rainfall, Holidays, Seasons, Hour
-- Label: Bike rental count (binary classification via thresholding)
+Distributions and outliers in continuous features like Wind_speed and Temperature were assessed across demand levels. High-demand days had warmer temperatures and typically moderate wind conditions.
 
-### 2. Preprocessing
-- Converted datetime column to day/hour
-- Removed outliers and handled missing values
-- Engineered `high_demand` classification label
+## 🤖 Machine Learning Models
+A binary classification approach was used to predict whether the daily demand would be high or low. Multiple machine learning models were implemented and tuned:
 
-### 3. Models Evaluated
-- Logistic Regression
-- Random Forest Classifier
-- Gradient Boosting
-- XGBoost
+### Decision Tree Classifier
+A basic classifier using recursive partitioning. The model was tuned using grid search for max_depth, min_samples_split, and criterion. The final decision tree showed that features like Hour, Temperature, and Season played key roles in splits.
 
----
+### XGBoost Classifier
+Applied with tree boosting and regularization to improve generalization. Hyperparameter tuning included learning_rate, n_estimators, and max_depth. XGBoost consistently outperformed other models in terms of accuracy and precision.
 
-## 📈 Key Results
+### Bagging and AdaBoost
+Ensemble learners were built to improve performance over a single base estimator. Bagging aggregated the predictions of multiple decision trees, while AdaBoost focused on correcting misclassifications iteratively.
 
-- **Random Forest** achieved ~87% accuracy
-- **Feature Importance** highlighted Temperature, Hour, and Holiday as top predictors
-- **Confusion Matrix** and ROC AUC visualizations confirmed model robustness
+### Artificial Neural Network
+A simple feed-forward neural network was implemented using Keras. It had a structure with dense hidden layers, ReLU activation, and dropout for regularization. The model was trained over 50 epochs and showed a gradual increase in validation accuracy, peaking near 82%.
 
----
+## 🧪 Evaluation and Results
+Each model was evaluated using accuracy, precision, recall, and F1-score. The test set performance showed that:
 
-## 🖼 Sample Visualizations
+XGBoost and Bagging were the most accurate models, both achieving about 93% classification accuracy.
 
-| Feature Correlation | Feature Importance |
-|---------------------|--------------------|
-| ![corr](visuals/correlation_matrix.png) | ![feat](visuals/feature_importance.png) |
+Tuned Decision Tree and AdaBoost followed closely behind, slightly under 92%.
 
----
+Neural Network performance was lower at 85%, likely due to limited model depth and lack of time-series temporal smoothing.
 
-## ⚙️ Tech Stack
+Confusion matrices were analyzed to inspect class-wise performance. All tree-based models displayed balanced precision and recall. The neural network showed slightly higher false positives and lower recall for high-demand predictions.
 
-- `Python`
-- `Pandas`, `NumPy`
-- `Matplotlib`, `Seaborn`
-- `Scikit-learn`, `XGBoost`
+## 🧠 Insights & Interpretability
+Demand prediction is highly influenced by hour of day and temperature, indicating behavioral trends like commuting patterns and weather sensitivity.
 
----
+Tree visualizations confirmed that demand spikes typically occur during midday hours, on non-holidays, and when temperatures are moderate to warm.
 
-## 📦 Installation
+Ensemble models are especially effective when working with structured tabular data and moderate feature engineering.
 
-```bash
-pip install -r requirements.txt
-```
-## 📁 Repository Structure
-seoul-bike-classification/
-├──notebook/
-|   ├── Seoul_Bike_Classification.ipynb
-├── data
-|   ├──SeoulBikeData.csv
-├── visuals/
-│   ├── correlation_matrix.png
-│   ├── feature_importance.png
-│   └── confusion_matrix.png
-├── requirements.txt
-└── README.md
+### 🛠 Tools and Libraries Used
+pandas, numpy for data manipulation
 
-## 🧪 Future Work
-- Include time series forecasting (e.g., ARIMA, LSTM)
+matplotlib, seaborn for visualization
 
-- Test demand at peak vs. off-peak hours
+scikit-learn for classic ML models and preprocessing
 
-- Build a real-time dashboard using Streamlit
+xgboost for gradient boosting
 
-## 👤 Author Information
-Don Richardson Bayya
+tensorflow and keras for building neural networks
+
+## 📌 Conclusion
+This project successfully demonstrates a real-world classification problem solved using traditional and advanced machine learning approaches. The combination of exploratory insights, feature engineering, model comparison, and visual evaluation provides a comprehensive case study in ML workflow design. XGBoost emerged as the most reliable model for this binary classification task.
+
